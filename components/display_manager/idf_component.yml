@@ -1,0 +1,7 @@
+version: "1.0.0"
+description: "Display manager autocontenido para ESP32-S3-EYE con LVGL"
+
+dependencies:
+  idf: ">=5.4"
+  espressif/esp32_s3_eye: ">=5.0.2"
+  lvgl/lvgl: ">=8.3.0"
