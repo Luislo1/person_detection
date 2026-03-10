@@ -22,13 +22,15 @@ extern "C" {
 #endif
 
 // Initializes all data needed for the example. The name is important, and needs
-// to be setup() for Arduino compatibility.
-void setup();
+// to be setup_video() for Arduino compatibility.
+void setup_video();
+void setup_audio();
 
 // Runs one iteration of data gathering and inference. This should be called
 // repeatedly from the application code. The name needs to be loop() for Arduino
 // compatibility.
-void loop();
+void loop_video();
+void loop_audio();
 
 #ifdef __cplusplus
 }

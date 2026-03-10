@@ -22,9 +22,14 @@ limitations under the License.
 
 #include "esp_main.h"
 #include "esp_cli.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/time.h>
 
-void tf_main(void) {
-  setup();
+
+void tf_main_video(void) {
+  setup_video();
 
   display_init();
 
@@ -35,12 +40,23 @@ void tf_main(void) {
   vTaskDelay(portMAX_DELAY);
 #else
   while (true) {
-    loop();
+    loop_video();
   }
 #endif
 }
 
+void tf_main_audio(void) {
+
+  vTaskDelay(pdMS_TO_TICKS(2000)); // Give scheduler a break
+  setup_audio();
+  while (true) {
+    loop_audio();
+  }
+}
+
+
 extern "C" void app_main() {
-  xTaskCreate((TaskFunction_t)&tf_main, "tf_main", 4 * 1024, NULL, 8, NULL);
+  xTaskCreate((TaskFunction_t)&tf_main_video, "tf_main_video", 4 * 1024, NULL, 8, NULL);
+  xTaskCreate((TaskFunction_t)&tf_main_audio, "tensorflow", 8 * 1024, NULL, 8, NULL);
   vTaskDelete(NULL);
 }
