@@ -125,8 +125,25 @@ TfLiteStatus GetImage(int image_width, int image_height, int channels, uint8_t* 
   MicroPrintf("Image Captured else\n");
   // We have initialised camera to grayscale
   // Just quantize to int8_t
-  for (int i = 0; i < image_width * image_height * channels; i++) {
-    image_data[i] = ((uint8_t *) fb->buf)[i];
+uint16_t *pixels = (uint16_t *)fb->buf;
+
+  for (int i = 0; i < image_height; i++)
+  {
+    for (int j = 0; j < image_width; j++)
+    {
+      uint16_t inference_pixel = pixels[i * image_width + j];
+
+      uint8_t hb = inference_pixel & 0xFF;
+      uint8_t lb = inference_pixel >> 8;
+
+      uint8_t r = (hb & 0xF8);
+      uint8_t g = ((hb & 0x07) << 5) | ((lb & 0xE0) >> 3);
+      uint8_t b = (lb & 0x1F) << 3;
+
+      image_data[(i * image_width + j) * 3] = r;
+      image_data[(i * image_width + j) * 3 + 1] = g;
+      image_data[(i * image_width + j) * 3 + 2] = b;
+    }
   }
 
   esp_camera_fb_return(fb);
